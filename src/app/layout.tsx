@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   description:
     "Interactive logic circuit simulator, number systems lab and 8-bit CPU emulator, with your work saved to the cloud.",
-  authors: [{ name: "Ahmad Saleem", url: "https://github.com/Ahmad980-code" }],
-  creator: "Ahmad Saleem",
+  authors: [{ name: "Ahmad Saleem Awan", url: "https://github.com/Ahmad980-code" }],
+  creator: "Ahmad Saleem Awan",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -40,9 +40,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <p>
             Made by{" "}
             <a href="https://github.com/Ahmad980-code" target="_blank" rel="noopener noreferrer" className="font-medium text-slate-300 hover:text-sky-400">
-              Ahmad Saleem
-            </a>{" "}
-            ·{" "}
+              Ahmad Saleem Awan
+            </a>
+          </p>
+          <p>Computer Engineering Student at COMSATS University Islamabad, Abbottabad Campus</p>
+          <p>
             <a href="https://github.com/Ahmad980-code/bitlab" target="_blank" rel="noopener noreferrer" className="hover:text-sky-400">
               Source on GitHub
             </a>
