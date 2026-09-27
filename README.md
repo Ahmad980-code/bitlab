@@ -189,4 +189,10 @@ supabase/
 
 ---
 
+## 👤 Author
+
+**Ahmad Saleem**, [@Ahmad980-code](https://github.com/Ahmad980-code)
+
+If you find BitLab useful, consider giving the repo a ⭐.
+
 Built with Next.js, Supabase and Vercel.
