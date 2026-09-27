@@ -101,7 +101,7 @@ Browser ──► Next.js on Vercel (App Router, Server Components, Server Actio
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/<your-username>/bitlab.git
+git clone https://github.com/Ahmad980-code/bitlab.git
 cd bitlab
 npm install
 ```
