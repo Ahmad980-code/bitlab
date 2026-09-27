@@ -1,69 +1,94 @@
-import Image from "next/image";
+import Link from "next/link";
+
+const TOOLS = [
+  {
+    href: "/logic",
+    title: "Logic Circuit Simulator",
+    tag: "Digital logic",
+    body: "Drag AND, OR, XOR and NOT gates onto a board and wire them together. BitLab generates the truth table and Boolean expression live. Try building adders, multiplexers and latches.",
+    accent: "from-emerald-400/20",
+    icon: "⊕",
+  },
+  {
+    href: "/bits",
+    title: "Bit Lab",
+    tag: "Number systems",
+    body: "Convert between binary, hex, octal and decimal. See two's complement and IEEE-754 floats bit by bit, and try shifts, rotates and carry/overflow flags.",
+    accent: "from-sky-400/20",
+    icon: "0x",
+  },
+  {
+    href: "/cpu",
+    title: "8-bit CPU Emulator",
+    tag: "Computer architecture",
+    body: "Write assembly, assemble it to machine code, and step through the fetch-decode-execute cycle while you watch registers, flags, the stack and memory change.",
+    accent: "from-amber-400/20",
+    icon: "⚙",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="space-y-14 py-6">
+      <section className="space-y-5 text-center">
+        <p className="font-mono text-xs tracking-[0.3em] text-sky-400 uppercase">
+          01000010 01101001 01110100
+        </p>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
+          See how computers work,
+          <br />
+          <span className="bg-gradient-to-r from-sky-400 to-emerald-400 bg-clip-text text-transparent">
+            one bit at a time.
+          </span>
+        </h1>
+        <p className="mx-auto max-w-2xl text-lg text-slate-400">
+          BitLab is an interactive playground for computer engineering, covering logic gates, number systems and a CPU you
+          can program. Sign in to save your circuits and programs to the cloud and keep your files in one place.
+        </p>
+        <div className="flex justify-center gap-3">
+          <Link href="/logic" className="btn btn-primary px-5 py-2.5 text-base">
+            Start building →
+          </Link>
+          <Link href="/cpu" className="btn px-5 py-2.5 text-base">
+            Program the CPU
+          </Link>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </section>
+
+      <section className="grid gap-5 md:grid-cols-3">
+        {TOOLS.map((t) => (
+          <Link
+            key={t.href}
+            href={t.href}
+            className={`panel group relative overflow-hidden bg-gradient-to-b ${t.accent} to-transparent p-6 transition-transform hover:-translate-y-1 hover:border-slate-600`}
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg border border-slate-700 bg-slate-950 font-mono text-xl">
+              {t.icon}
+            </div>
+            <p className="text-xs font-medium tracking-wide text-slate-400 uppercase">{t.tag}</p>
+            <h2 className="mt-1 text-xl font-semibold">{t.title}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-400">{t.body}</p>
+            <p className="mt-5 text-sm text-sky-400 group-hover:underline">Open →</p>
+          </Link>
+        ))}
+      </section>
+
+      <section className="panel grid gap-6 p-6 md:grid-cols-4">
+        <div className="md:col-span-1">
+          <h2 className="text-lg font-semibold">☁ Cloud-powered</h2>
+          <p className="mt-1 text-sm text-slate-400">Your work follows you across devices.</p>
         </div>
-      </main>
+        {[
+          ["Authentication", "Email and password accounts with Supabase Auth, using secure cookie sessions."],
+          ["Cloud database", "Circuits and programs are saved to Postgres, and row-level security keeps each user's data private."],
+          ["File storage", "Upload, download and manage files in your own private cloud storage folder."],
+        ].map(([title, body]) => (
+          <div key={title}>
+            <h3 className="font-medium">{title}</h3>
+            <p className="mt-1 text-sm text-slate-400">{body}</p>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

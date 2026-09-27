@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BitLab: a Computer Engineering Playground
 
-## Getting Started
+BitLab is a Next.js web app with three interactive tools for learning how computers work. It uses cloud services for user accounts, a database, and file storage.
 
-First, run the development server:
+| Tool | What it does |
+| --- | --- |
+| **Logic Circuit Simulator** (`/logic`) | Drag gates (AND, OR, NOT, NAND, NOR, XOR, XNOR) onto a board, wire them up and toggle switches. It builds a live truth table and Boolean expression. Supports feedback circuits such as the SR latch. |
+| **Bit Lab** (`/bits`) | Converts between binary, hex, octal and decimal in 8, 16 or 32 bits. Shows two's complement and the IEEE-754 float layout, and runs bitwise and arithmetic operations with carry and overflow flags. |
+| **8-bit CPU Emulator** (`/cpu`) | A two-pass assembler and emulator for a small ISA with 4 registers, Z/C/N flags, a stack, CALL/RET and 256 bytes of memory. You can step through programs and watch the registers and memory change. |
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Cloud architecture
+
+```
+Browser ──► Next.js on Vercel (App Router, Server Components, Server Actions, Proxy)
+                 │
+                 ▼
+             Supabase
+             ├── Auth      : email/password accounts, cookie sessions (@supabase/ssr)
+             ├── Postgres  : `projects` table (saved circuits and programs as JSONB)
+             └── Storage   : private `files` bucket, one folder per user
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Authentication**: sign-up and sign-in with Supabase Auth. [src/proxy.ts](src/proxy.ts) refreshes the session cookie on every request and protects `/dashboard`.
+- **Cloud database**: "Save to cloud" in the simulator and the emulator writes to `public.projects`. Row-level security means each user can only read or change their own rows.
+- **File storage**: the "My Cloud" dashboard lets users upload, download (through short-lived signed URLs) and delete files in a private bucket. Storage policies restrict each user to their own `<user-id>/` folder.
+- **Hosting**: deployed on Vercel.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All the tools still work if Supabase isn't configured. Only the cloud features are turned off.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Running locally
 
-## Learn More
+```bash
+npm install
+npm run dev          # http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Setting up Supabase (free tier)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Create a project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor → New query**, paste the contents of [supabase/schema.sql](supabase/schema.sql), and click **Run**. This creates the table, the security policies and the storage bucket.
+3. Open **Project Settings → API** and copy the **Project URL** and the **publishable (anon) key**.
+4. Copy `.env.example` to `.env.local` and fill in both values, then restart `npm run dev`.
+5. Optional: to skip confirmation emails while testing, go to **Authentication → Sign In / Providers → Email** and turn off **Confirm email**.
+6. Open **Authentication → URL Configuration** and add `http://localhost:3000/auth/callback`, plus your Vercel URL followed by `/auth/callback` once you've deployed, to the **Redirect URLs**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploying to Vercel
 
-## Deploy on Vercel
+1. Push this repository to GitHub.
+2. At [vercel.com/new](https://vercel.com/new), import the repository. Vercel detects Next.js automatically.
+3. Under **Environment Variables**, add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+4. Click **Deploy**. Then set your Vercel URL as the **Site URL** in Supabase and add it to the redirect URLs (step 6 above).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/                 routes: /, /logic, /bits, /cpu, /login, /dashboard, /auth/callback
+  components/          LogicSim, BitLab, CpuEmulator, CloudSave, FileManager, LoginForm, Nav
+  lib/logic.ts         circuit simulation engine and example circuits
+  lib/cpu.ts           ISA definition, assembler, emulator and example programs
+  lib/supabase/        browser and server Supabase clients, config
+  proxy.ts             session refresh and route protection
+supabase/schema.sql    database tables, row-level security and storage policies
+```
